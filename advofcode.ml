@@ -1,1 +1,1 @@
-Day1.main;;
+let () = Day1.main()

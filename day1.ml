@@ -1,15 +1,3 @@
-let read_raw = 
-    let file = "day1.input" in
-    let lines = ref [] in 
-    let chan = open_in file in 
-    try
-        while true; do
-            lines := input_line chan  :: !lines
-        done; !lines
-    with End_of_file ->
-        close_in chan;
-        List.rev !lines
-
 type foldexpr = { counter: int; last : int option}
 
 let int_of_bool b = if b then 1 else 0
@@ -21,22 +9,29 @@ let do_fold expr cur =
 
 let (>>) f g x = g (f x)
 
-let rec map_slide3 f l = 
-    match l with
+let rec map_slide3 f = function
     | a :: b :: c :: r -> f [a; b; c;] :: map_slide3 f (b :: c :: r)
     | _ -> []
 
-let rec sum l =
-    match l with 
-    | [] -> 0
-    | e :: r -> e + sum r
+let sum = List.fold_left (+) 0
 
-let main = 
-    let res = read_raw |> List.map (String.trim >> int_of_string) |> List.fold_left do_fold { counter = 0; last = None } in
-    string_of_int res.counter |> print_endline;
+let grab_counter x = x.counter
 
-    let res = read_raw |> List.map (String.trim >> int_of_string) |> map_slide3 sum |> List.fold_left do_fold { counter = 0; last = None } in
-    string_of_int res.counter |> print_endline;
+let main () = 
+    let chall = Core.In_channel.read_all "day1.input" |> String.split_on_char '\n' |> List.filter_map (String.trim >> int_of_string_opt) in
+
+    chall
+    |> List.fold_left do_fold { counter = 0; last = None }
+    |> grab_counter
+    |> string_of_int
+    |> print_endline;
+
+    chall
+    |> map_slide3 sum 
+    |> List.fold_left do_fold { counter = 0; last = None }
+    |> grab_counter
+    |> string_of_int
+    |> print_endline
 
 
 
