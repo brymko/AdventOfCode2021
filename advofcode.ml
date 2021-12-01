@@ -1,1 +1,1 @@
-let () = print_endline "Hello, World!"
+Day1.main;;
