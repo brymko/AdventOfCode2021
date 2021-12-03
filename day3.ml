@@ -8,29 +8,20 @@ let rec add_list a b =
     | None, Some eb -> eb :: add_list [] (List.tl b)
     | None, None -> []
 
-let print_list f lst =
-  let rec print_elements = function
-    | [] -> ()
-    | h::t -> f h; print_string ";"; print_elements t
-  in
-  print_string "[";
-  print_elements lst;
-  print_endline "]";;
-
 let filter_mask mask e =
-    print_list print_char e;
     match e with 
     | a :: r when a = mask -> Some r
     | _ -> None
 
 let rec part2 maskfn l = 
-    let mask = maskfn l in 
-    print_char mask;
-    print_newline ();
-    match List.filter_map (filter_mask mask) l with
-    | [] -> List.hd l
-    | a :: [] -> [mask] @ a
-    | r -> mask :: part2 maskfn r
+    if List.hd l |> List.length = 0 then
+        []
+    else
+        let mask = maskfn l in 
+        match List.filter_map (filter_mask mask) l with
+        | [] -> List.hd l
+        | a :: [] -> [mask] @ a
+        | r -> mask :: part2 maskfn r
 
 let gen_mask_ox l =
     let amount1 = List.fold_left (+) 0 (List.map (List.hd >> int_of_char >> (+) (-0x30)) l) in
