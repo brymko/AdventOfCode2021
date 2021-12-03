@@ -21,4 +21,3 @@ let main () =
     ) (0, 0, 0)  chall
     |> (fun (a, b, _) -> a * b) |> string_of_int |> print_endline
 
-    
